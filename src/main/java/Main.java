@@ -68,6 +68,10 @@ public class Main {
             InternOperation.countInternsPerMentor();
             System.out.println("######################## \n");
 
+            System.out.println("Assigning a Project to an Intern \n");
+            InternOperation.assignProjectToIntern(4, 2);
+            System.out.println("######################## \n");
+
 
 
         } catch (SQLException e) {

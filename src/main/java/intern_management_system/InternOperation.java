@@ -245,5 +245,22 @@ public class InternOperation {
         }
     }
 
+    /************************ Excercise 12 ************************/
+    public static void assignProjectToIntern(int internId, int projectId) throws SQLException {
+        String sql = "insert into intern_project(intern_id, project_id) values(?, ?)";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, internId);
+            ps.setInt(2, projectId);
+
+            int rowsInserted = ps.executeUpdate();
+
+            System.out.println("Number of inserted rows: " + rowsInserted);
+        }
+    }
+
 
 }
