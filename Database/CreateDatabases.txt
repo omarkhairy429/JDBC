@@ -1,0 +1,147 @@
+-- Table: public.intern
+
+-- DROP TABLE IF EXISTS public.intern;
+
+CREATE TABLE IF NOT EXISTS public.intern
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    birth_date date NOT NULL,
+    faculty character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    mentor_id integer NOT NULL,
+    track_id integer NOT NULL,
+    CONSTRAINT intern_pkey PRIMARY KEY (id),
+    CONSTRAINT intern_email_key UNIQUE (email),
+    CONSTRAINT fk_mentor FOREIGN KEY (mentor_id)
+        REFERENCES public.mentors (mentor_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_track FOREIGN KEY (track_id)
+        REFERENCES public.intern_tracks (track_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.intern
+    OWNER to postgres;
+-- Index: index_intern_track_id
+
+-- DROP INDEX IF EXISTS public.index_intern_track_id;
+
+CREATE INDEX IF NOT EXISTS index_intern_track_id
+    ON public.intern USING btree
+    (track_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+---------------------------------------------------------------------------------------------------------------------------------
+-- Table: public.intern_tracks
+
+-- DROP TABLE IF EXISTS public.intern_tracks;
+
+CREATE TABLE IF NOT EXISTS public.intern_tracks
+(
+    track_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT intern_tracks_pkey PRIMARY KEY (track_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.intern_tracks
+    OWNER to postgres;
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Table: public.intern_project
+
+-- DROP TABLE IF EXISTS public.intern_project;
+
+CREATE TABLE IF NOT EXISTS public.intern_project
+(
+    intern_id integer NOT NULL,
+    project_id integer NOT NULL,
+    CONSTRAINT intern_project_pkey PRIMARY KEY (intern_id, project_id),
+    CONSTRAINT fk_intern FOREIGN KEY (intern_id)
+        REFERENCES public.intern (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT fk_project FOREIGN KEY (project_id)
+        REFERENCES public.projects (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.intern_project
+    OWNER to postgres;
+---------------------------------------------------------------------------------------------------------------------------------------
+-- Table: public.mentors
+
+-- DROP TABLE IF EXISTS public.mentors;
+
+CREATE TABLE IF NOT EXISTS public.mentors
+(
+    mentor_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT mentors_pkey PRIMARY KEY (mentor_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.mentors
+    OWNER to postgres;
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Table: public.project_submissions
+
+-- DROP TABLE IF EXISTS public.project_submissions;
+
+CREATE TABLE IF NOT EXISTS public.project_submissions
+(
+    submission_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    intern_id integer NOT NULL,
+    project_id integer NOT NULL,
+    submitted_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    score integer NOT NULL,
+    CONSTRAINT project_submissions_pkey PRIMARY KEY (submission_id),
+    CONSTRAINT fk_submission_intern FOREIGN KEY (intern_id)
+        REFERENCES public.intern (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT fk_submission_project FOREIGN KEY (project_id)
+        REFERENCES public.projects (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT checkrange CHECK (score >= 0 AND score <= 100)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.project_submissions
+    OWNER to postgres;
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Table: public.projects
+
+-- DROP TABLE IF EXISTS public.projects;
+
+CREATE TABLE IF NOT EXISTS public.projects
+(
+    project_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    status text COLLATE pg_catalog."default",
+    CONSTRAINT projects_pkey PRIMARY KEY (project_id),
+    CONSTRAINT projects_status_check CHECK (status = ANY (ARRAY['planned'::text, 'active'::text, 'completed'::text]))
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.projects
+    OWNER to postgres;
+
+
+
+
+
