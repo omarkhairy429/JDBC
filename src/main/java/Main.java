@@ -43,6 +43,31 @@ public class Main {
 //            InternOperation.updateInternMentor(9, 2);
 //            System.out.println("######################## \n");
 
+//            System.out.println("Deleting an Intern \n");
+//            InternOperation.deleteInternById(13);
+//            System.out.println("######################## \n");
+
+            System.out.println("Finding interns by Track Name \n");
+            List<Intern> trackInterns = InternOperation.findInternsByTrackName("Backend");
+            for (Intern currentIntern : trackInterns) {
+                currentIntern.displayIntern();
+            }
+            System.out.println("######################## \n");
+
+
+            System.out.println("Showing projects assigned to intern \n");
+            InternOperation.findProjectsByInternName("Omar Nabil");
+            System.out.println("######################## \n");
+
+
+            System.out.println("Counting interns per Track \n");
+            InternOperation.countInternsPerTrack();
+            System.out.println("######################## \n");
+
+            System.out.println("Counting interns per Mentor \n");
+            InternOperation.countInternsPerMentor();
+            System.out.println("######################## \n");
+
 
 
         } catch (SQLException e) {

@@ -129,5 +129,121 @@ public class InternOperation {
         }
     }
 
+    /************************ Excercise 7 ************************/
+    public static void deleteInternById(int id) throws SQLException {
+        String sql = "DELETE FROM intern WHERE id = ?";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
+
+            int rowsDeleted = ps.executeUpdate();
+
+            System.out.println("Number of deleted rows: " + rowsDeleted);
+        }
+    }
+
+    /************************ Excercise 8 ************************/
+    public static List<Intern> findInternsByTrackName(String trackName) throws SQLException {
+        List<Intern> interns = new ArrayList<>();
+
+        String sql = "select intern.id, intern.name, intern.email, intern.mentor_id, intern.track_id " +
+                "from intern, intern_tracks " +
+                "where intern.track_id = intern_tracks.track_id and intern_tracks.name = ?";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, trackName);
+
+            try (ResultSet result = ps.executeQuery()) {
+                while (result.next()) {
+                    int id = result.getInt("id");
+                    String name = result.getString("name");
+                    String email = result.getString("email");
+                    int mentorId = result.getInt("mentor_id");
+                    int trackId = result.getInt("track_id");
+
+                    Intern intern = new Intern(id, name, email, mentorId, trackId);
+                    interns.add(intern);
+                }
+            }
+        }
+        return interns;
+    }
+
+    /************************ Excercise 9 ************************/
+    public static List<String> findProjectsByInternName(String fullName) throws SQLException {
+        List<String> projectNames = new ArrayList<>();
+
+        String sql = "select projects.name " +
+                "from intern, intern_project, projects " +
+                "where intern.id = intern_project.intern_id " +
+                "and intern_project.project_id = projects.project_id " +
+                "and intern.name = ?";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, fullName);
+
+            try (ResultSet result = ps.executeQuery()) {
+                while (result.next()) {
+                    String projectName = result.getString(1);
+
+                    System.out.println("Intern Name: " + fullName + ", Project Name: " + projectName);
+
+                    projectNames.add(projectName);
+                }
+            }
+        }
+        return projectNames;
+    }
+
+    /************************ Excercise 10 ************************/
+    public static void countInternsPerTrack() throws SQLException {
+        // Group by track name and count matching intern IDs
+        String sql = "select intern_tracks.name, count(intern.id) " +
+                "from intern, intern_tracks " +
+                "where intern.track_id = intern_tracks.track_id " +
+                "group by intern_tracks.name";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ResultSet result = ps.executeQuery()
+        ) {
+            while (result.next()) {
+                String trackName = result.getString(1);
+                int count = result.getInt(2);
+                System.out.println("Track Name: " + trackName + ", Intern Count: " + count);
+            }
+        }
+    }
+
+    /************************ Excercise 11 ************************/
+    public static void countInternsPerMentor() throws SQLException {
+        String sql = "select mentors.name, count(intern.id) " +
+                "from intern, mentors " +
+                "where intern.mentor_id = mentors.mentor_id " +
+                "group by mentors.name";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ResultSet result = ps.executeQuery()
+        ) {
+            while (result.next()) {
+                String mentorName = result.getString(1);
+                int count = result.getInt(2);
+                System.out.println("Mentor Name: " + mentorName + ", Intern Count: " + count);
+            }
+        }
+    }
+
 
 }
