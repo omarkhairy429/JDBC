@@ -4,8 +4,10 @@ import intern_management_system.InternOperation;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Main {
     public static void main(String[] args){
@@ -26,10 +28,17 @@ public class Main {
 
 
             System.out.println("Finding an intern by id \n");
-            System.out.println();
             Intern intern = InternOperation.findByID(4);
             intern.displayIntern();
             System.out.println("######################## \n");
+
+
+            System.out.println("Inserting an Intern \n");
+            LocalDate birthDate = LocalDate.of(2003, 06, 23);
+            InternOperation.insertIntern("Omar Fayed", "omar.mo.5832@gmail.com", birthDate, "Ain Shams",1, 1);
+            System.out.println("Intern inserted successfully");
+            System.out.println("######################## \n");
+
 
 
         } catch (SQLException e) {

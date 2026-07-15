@@ -87,26 +87,26 @@ public class InternOperation {
     }
 
     /************************ Excercise 5 ************************/
-//    public static void insertIntern(String name, String email, LocalDate birthDate, String faculty, int trackID, int mentorID) throws SQLException {
-//        String sql =
-//                "Insert intro intern(name, email, birth_date, faculty, mentor_id, track_id)" +
-//                        "Values(?, ?, ?, ?, ?, ?)";
-//        try (
-//                Connection connection = DatabaseConfig.getConnection();
-//                )
-//        {
-//            try (PreparedStatement ps = connection.prepareStatement(sql))
-//            {
-//                ps.setString(1, name);
-//                ps.setString(2, email);
-//                ps.setDate(3, birthDate);
-//                ps.setString(4, faculty);
-//                ps.setInt(5, trackID);
-//                ps.setInt(6, mentorID);
-//                ResultSet resultSet = ps.executeQuery();
-//            }
-//        }
-//    }
+    public static void insertIntern(String name, String email, LocalDate birthDate, String faculty, int trackID, int mentorID) throws SQLException {
+        String sql =
+                "Insert into intern(name, email, birth_date, faculty, track_id, mentor_id)" +
+                        "Values(?, ?, ?, ?, ?, ?)";
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                )
+        {
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ps.setString(1, name);
+                ps.setString(2, email);
+                ps.setDate(3, java.sql.Date.valueOf(birthDate));
+                ps.setString(4, faculty);
+                ps.setInt(5, trackID);
+                ps.setInt(6, mentorID);
+                ps.executeUpdate();
+            }
+        }
+    }
 
 
 }
