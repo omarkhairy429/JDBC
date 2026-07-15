@@ -68,10 +68,27 @@ public class Main {
             InternOperation.countInternsPerMentor();
             System.out.println("######################## \n");
 
-            System.out.println("Assigning a Project to an Intern \n");
-            InternOperation.assignProjectToIntern(4, 2);
+//            System.out.println("Assigning a Project to an Intern \n");
+//            InternOperation.assignProjectToIntern(4, 2);
+//            System.out.println("######################## \n");
+
+            System.out.println("Showing all Intern-Project Assignments \n");
+            InternOperation.showAllInternProjectAssignments();
             System.out.println("######################## \n");
 
+
+            System.out.println("Inserting a project submission... \n");
+            InternOperation.insertSubmission(4, 3, 85);
+            System.out.println("######################## \n");
+
+
+            System.out.println("Reading all submissions: \n");
+            InternOperation.displayAllSubmissions();
+            System.out.println("######################## \n");
+
+            System.out.println("Updating project status \n");
+            InternOperation.updateProjectStatus(3, "completed");
+            System.out.println("######################## \n");
 
 
         } catch (SQLException e) {
