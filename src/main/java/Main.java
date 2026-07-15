@@ -1,6 +1,8 @@
 import config.DatabaseConfig;
 import intern_management_system.Intern;
 import intern_management_system.InternOperation;
+import intern_management_system.ProjectDAO;
+import intern_management_system.SubmissionDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -56,7 +58,7 @@ public class Main {
 
 
             System.out.println("Showing projects assigned to intern \n");
-            InternOperation.findProjectsByInternName("Omar Nabil");
+            ProjectDAO.findProjectsByInternName("Omar Nabil");
             System.out.println("######################## \n");
 
 
@@ -73,21 +75,21 @@ public class Main {
 //            System.out.println("######################## \n");
 
             System.out.println("Showing all Intern-Project Assignments \n");
-            InternOperation.showAllInternProjectAssignments();
+            ProjectDAO.showAllInternProjectAssignments();
             System.out.println("######################## \n");
 
 
             System.out.println("Inserting a project submission... \n");
-            InternOperation.insertSubmission(4, 3, 85);
+            SubmissionDAO.insertSubmission(4, 3, 85);
             System.out.println("######################## \n");
 
 
             System.out.println("Reading all submissions: \n");
-            InternOperation.displayAllSubmissions();
+            SubmissionDAO.displayAllSubmissions();
             System.out.println("######################## \n");
 
             System.out.println("Updating project status \n");
-            InternOperation.updateProjectStatus(3, "completed");
+            ProjectDAO.updateProjectStatus(3, "completed");
             System.out.println("######################## \n");
 
 

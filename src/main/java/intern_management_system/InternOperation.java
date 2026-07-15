@@ -14,6 +14,7 @@ public class InternOperation {
 
     /************************ Excercise 2 ************************/
     public static List<Intern> findAllInterns() {
+
         List<Intern> interns = new ArrayList<>();
         String sql = "select * from intern";
 
@@ -67,9 +68,9 @@ public class InternOperation {
         String sql = "select * from intern where intern.id = ?";
         try (
                 Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
                 )
         {
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setInt(1, id);
                 ResultSet result = ps.executeQuery();
                 if (result.next()) {
@@ -80,7 +81,7 @@ public class InternOperation {
                     int track_id = result.getInt("track_id");
                     Intern intern = new Intern(intern_id, name, email, mentor_id, track_id);
                     return intern;
-                }
+
             }
         }
         return null;
@@ -93,10 +94,10 @@ public class InternOperation {
                         "Values(?, ?, ?, ?, ?, ?)";
         try (
                 Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
                 )
         {
-            try (PreparedStatement ps = connection.prepareStatement(sql))
-            {
+
                 ps.setString(1, name);
                 ps.setString(2, email);
                 ps.setDate(3, java.sql.Date.valueOf(birthDate));
@@ -105,7 +106,6 @@ public class InternOperation {
                 ps.setInt(6, mentorID);
                 int rowsUpdated = ps.executeUpdate();
                 System.out.println("Number of Rows Updated: " + rowsUpdated);
-            }
         }
     }
 
@@ -175,38 +175,10 @@ public class InternOperation {
         return interns;
     }
 
-    /************************ Excercise 9 ************************/
-    public static List<String> findProjectsByInternName(String fullName) throws SQLException {
-        List<String> projectNames = new ArrayList<>();
 
-        String sql = "select projects.name " +
-                "from intern, intern_project, projects " +
-                "where intern.id = intern_project.intern_id " +
-                "and intern_project.project_id = projects.project_id " +
-                "and intern.name = ?";
-
-        try (
-                Connection connection = DatabaseConfig.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            ps.setString(1, fullName);
-
-            try (ResultSet result = ps.executeQuery()) {
-                while (result.next()) {
-                    String projectName = result.getString(1);
-
-                    System.out.println("Intern Name: " + fullName + ", Project Name: " + projectName);
-
-                    projectNames.add(projectName);
-                }
-            }
-        }
-        return projectNames;
-    }
 
     /************************ Excercise 10 ************************/
     public static void countInternsPerTrack() throws SQLException {
-        // Group by track name and count matching intern IDs
         String sql = "select intern_tracks.name, count(intern.id) " +
                 "from intern, intern_tracks " +
                 "where intern.track_id = intern_tracks.track_id " +
@@ -245,103 +217,5 @@ public class InternOperation {
         }
     }
 
-    /************************ Excercise 12 ************************/
-    public static void assignProjectToIntern(int internId, int projectId) throws SQLException {
-        String sql = "insert into intern_project(intern_id, project_id) values(?, ?)";
-
-        try (
-                Connection connection = DatabaseConfig.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            ps.setInt(1, internId);
-            ps.setInt(2, projectId);
-
-            int rowsInserted = ps.executeUpdate();
-
-            System.out.println("Number of inserted rows: " + rowsInserted);
-        }
-    }
-
-    public static void showAllInternProjectAssignments() throws SQLException {
-        String sql = "select intern.name, projects.name " +
-                "from intern, intern_project, projects " +
-                "where intern.id = intern_project.intern_id " +
-                "and intern_project.project_id = projects.project_id";
-
-        try (
-                Connection connection = DatabaseConfig.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql);
-                ResultSet result = ps.executeQuery()
-        ) {
-            while (result.next()) {
-                String internName = result.getString(1);
-                String projectName = result.getString(2);
-
-                System.out.println("Intern: " + internName + ", Project: " + projectName);
-            }
-        }
-    }
-
-    /************************ Excercise 14 ************************/
-    public static void insertSubmission(int internId, int projectId, int score) throws SQLException {
-        String sql = "insert into project_submissions (intern_id, project_id, score) values (?, ?, ?)";
-
-        try (
-                Connection connection = DatabaseConfig.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            ps.setInt(1, internId);
-            ps.setInt(2, projectId);
-            ps.setInt(3, score);
-
-            int rowsInserted = ps.executeUpdate();
-            System.out.println("Number of inserted rows: " + rowsInserted);
-        }
-    }
-
-
-    public static void displayAllSubmissions() throws SQLException {
-        String sql = "select project_submissions.submission_id, intern.name, projects.name, " +
-                "project_submissions.submitted_at, project_submissions.score " +
-                "from project_submissions, intern, projects " +
-                "where project_submissions.intern_id = intern.id " +
-                "and project_submissions.project_id = projects.project_id";
-
-        try (
-                Connection connection = DatabaseConfig.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql);
-                ResultSet result = ps.executeQuery()
-        ) {
-            while (result.next()) {
-                int submissionId = result.getInt(1);
-                String internName = result.getString(2);
-                String projectName = result.getString(3);
-                java.sql.Timestamp submittedAt = result.getTimestamp(4);
-                int score = result.getInt(5);
-
-                System.out.println("Sub ID: " + submissionId +
-                        ", Intern: " + internName +
-                        ", Project: " + projectName +
-                        ", Submitted At: " + submittedAt +
-                        ", Score: " + score);
-            }
-        }
-    }
-
-    /************************ Excercise 15 ************************/
-    public static void updateProjectStatus(int projectId, String status) throws SQLException {
-        String sql = "update projects set status = ? where project_id = ?";
-
-        try (
-                Connection connection = DatabaseConfig.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            ps.setString(1, status);
-            ps.setInt(2, projectId);
-
-            int rowsUpdated = ps.executeUpdate();
-            System.out.println("Number of updated rows: " + rowsUpdated);
-        }
-    }
 
 }
