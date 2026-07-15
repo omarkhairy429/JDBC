@@ -33,11 +33,15 @@ public class Main {
             System.out.println("######################## \n");
 
 
-            System.out.println("Inserting an Intern \n");
-            LocalDate birthDate = LocalDate.of(2003, 06, 23);
-            InternOperation.insertIntern("Omar Fayed", "omar.mo.5832@gmail.com", birthDate, "Ain Shams",1, 1);
-            System.out.println("Intern inserted successfully");
-            System.out.println("######################## \n");
+//            System.out.println("Inserting an Intern \n");
+//            LocalDate birthDate = LocalDate.of(2003, 06, 23);
+//            InternOperation.insertIntern("Omar Fayed", "omar.123.5832@gmail.com", birthDate, "Ain Shams",1, 1);
+//            System.out.println("Intern inserted successfully");
+//            System.out.println("######################## \n");
+
+//            System.out.println("Updating mentor of an Intern \n");
+//            InternOperation.updateInternMentor(9, 2);
+//            System.out.println("######################## \n");
 
 
 

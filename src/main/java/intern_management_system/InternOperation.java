@@ -103,8 +103,29 @@ public class InternOperation {
                 ps.setString(4, faculty);
                 ps.setInt(5, trackID);
                 ps.setInt(6, mentorID);
-                ps.executeUpdate();
+                int rowsUpdated = ps.executeUpdate();
+                System.out.println("Number of Rows Updated: " + rowsUpdated);
             }
+        }
+    }
+
+
+    /************************ Excercise 6 ************************/
+    public static void updateInternMentor(int internId, int mentorId) throws SQLException {
+        String sql = "UPDATE intern SET mentor_id = ? WHERE id = ?";
+
+        try (
+                Connection connection = DatabaseConfig.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, mentorId);
+
+            ps.setInt(2, internId);
+
+            int rowsUpdated = ps.executeUpdate();
+
+            System.out.println("Number of updated rows: " + rowsUpdated);
         }
     }
 
